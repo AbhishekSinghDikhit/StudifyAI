@@ -39,7 +39,7 @@ const PdfSummarization = () => {
     setError(null);
 
     try {
-      const response = await fetch("https://studifyai-9ba7.onrender.com/summarize-pdf", {
+      const response = await fetch("https://backend-service-278839010965.us-central1.run.app/summarize-pdf", {
         method: "POST",
         body: formData,
       });
