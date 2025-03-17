@@ -28,8 +28,8 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    # allow_origins=["http://localhost:5173"],  # React frontend
+    # allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "https://studify-ai-2104.vercel.app"],  # React frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -119,21 +119,6 @@ def get_current_user(request: Request):
             return user
     return None
 
-# @app.get("/")
-# async def home(request: Request, user=Depends(get_current_user)):
-#     """Home page."""
-#     return templates.TemplateResponse("index.html", {"request": request, "user": user})
-
-# @app.get("/auth")
-# async def auth_page(request: Request):
-#     """Authentication page."""
-#     return templates.TemplateResponse("auth.html", {"request": request})
-
-# @app.get("/profile")
-# async def profile(request: Request, user=Depends(get_current_user)):
-#     #profile page
-#     return templates.TemplateResponse("profile.html", {"request": request})
-
 # @app.post("/userprofile")
 # async def get_profile(token: str = Depends(oauth2_scheme)):
 #     try:
@@ -152,26 +137,7 @@ def get_current_user(request: Request):
 #         logging.error(f"Error fetching profile: {e}")
 #         return JSONResponse({"error": "Error fetching profile data"}, status_code=500)
 
-# @app.get("/qaTool")
-# async def qa_tool(request: Request):
-#     return templates.TemplateResponse("qa.html", {"request": request})
 
-# @app.get("/questionGenerator")
-# async def question_generator(request: Request, user=Depends(get_current_user)):
-#     # if not user:
-#     #     return RedirectResponse (url = "/auth")
-#     return templates.TemplateResponse("question_generator.html", {"request": request, "user": user})
-
-# @app.get("/pdfSummarizer")
-# async def pdf_summarizer_page(request: Request, user=Depends(get_current_user)):
-#     return templates.TemplateResponse("pdf_summarizer.html", {"request": request, "user":user})
-
-# @app.get("/questions")
-# async def questions_page(request: Request, user=Depends(get_current_user)):
-#     """Display questions."""
-#     # if not user:
-#     #     return RedirectResponse(url="/auth")
-#     return templates.TemplateResponse("questions.html", {"request": request, "user": user})
 
 # SQLite helper functions
 def init_db():
@@ -494,4 +460,4 @@ async def analyze(
 
 if __name__ == "__main__":
     init_db()
-    uvicorn.run(app, host="localhost", port=8000, reload=True)
+    uvicorn.run(app, host="localhost", port=8080, reload=True)
