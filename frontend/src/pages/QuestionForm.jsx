@@ -60,7 +60,7 @@ const QuestionForm = () => {
     formData.append("marks_per_question", marksPerQuestion);
 
     try {
-      const response = await axios.post(`${Meta.env.VITE_BACKEND_PUBLIC_URL}/analyze`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_PUBLIC_URL}/analyze`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

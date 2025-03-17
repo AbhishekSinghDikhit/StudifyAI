@@ -39,7 +39,7 @@ const PdfSummarization = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${Meta.env.VITE_BACKEND_PUBLIC_URL}/summarize-pdf`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_PUBLIC_URL}/summarize-pdf`, {
         method: "POST",
         body: formData,
       });

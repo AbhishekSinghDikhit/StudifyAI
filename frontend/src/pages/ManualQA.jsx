@@ -52,7 +52,7 @@ const ManualQA = () => {
     formData.append("word_limit", wordLimit);
 
     try {
-      const response = await axios.post(`${Meta.env.VITE_BACKEND_PUBLIC_URL}/askQuestion`, formData);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_PUBLIC_URL}/askQuestion`, formData);
       setAnswer(response.data.answer);
     } catch (error) {
       console.error("Error fetching answer:", error);
