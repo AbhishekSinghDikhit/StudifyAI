@@ -39,7 +39,7 @@ const PdfSummarization = () => {
     setError(null);
 
     try {
-      const response = await fetch("https://backend-service-278839010965.us-central1.run.app/summarize-pdf", {
+      const response = await fetch(`${Meta.env.VITE_BACKEND_PUBLIC_URL}/summarize-pdf`, {
         method: "POST",
         body: formData,
       });
