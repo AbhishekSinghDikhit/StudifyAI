@@ -52,7 +52,7 @@ const ManualQA = () => {
     formData.append("word_limit", wordLimit);
 
     try {
-      const response = await axios.post("http://localhost:8000/askQuestion", formData);
+      const response = await axios.post("https://studifyai-9ba7.onrender.com/askQuestion", formData);
       setAnswer(response.data.answer);
     } catch (error) {
       console.error("Error fetching answer:", error);

@@ -60,7 +60,7 @@ const QuestionForm = () => {
     formData.append("marks_per_question", marksPerQuestion);
 
     try {
-      const response = await axios.post("http://localhost:8000/analyze", formData, {
+      const response = await axios.post("https://studifyai-9ba7.onrender.com/analyze", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
