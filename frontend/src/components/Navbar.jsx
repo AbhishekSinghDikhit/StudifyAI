@@ -26,8 +26,8 @@ const Navbar = () => {
   return (
     <nav className="bg-blue-600 p-4 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <Link to="/" className="text-white text-xl font-bold">
-          StudifyAI
+        <Link to="/">
+          <img src="src/assets/studify_logo.png" alt="Logo" className="h-12 w-auto" />
         </Link>
         <div className="space-x-4">
           <Link to="/" className="text-white hover:text-gray-200">Home</Link>
