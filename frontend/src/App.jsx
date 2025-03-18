@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
       </div>
       <Footer />
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
