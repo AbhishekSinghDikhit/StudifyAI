@@ -85,6 +85,7 @@ const PdfSummarization = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#AA60C8] to-[#FFDFEF] p-6">
       {/* Glassmorphic Card */}
+     <div className="mt-20 w-full flex justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -153,6 +154,7 @@ const PdfSummarization = () => {
         )}
       </motion.div>
     </div>
+  </div>
   );
 };
 
