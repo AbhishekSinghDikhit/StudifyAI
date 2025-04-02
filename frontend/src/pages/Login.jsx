@@ -7,6 +7,17 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import {
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Box,
+  Divider,
+} from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -44,64 +55,146 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-500 to-purple-600">
-      {/* Glassmorphic Login Box */}
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #AA60C8 0%, #D69ADE 100%)",
+      }}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
-        className="bg-white bg-opacity-20 backdrop-blur-md p-8 rounded-2xl shadow-2xl w-96 text-white"
       >
-        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back 👋</h2>
-
-        {error && <p className="text-red-300 text-sm text-center mb-3">{error}</p>}
-
-        <form onSubmit={handleEmailLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-3 rounded-lg bg-white bg-opacity-30 placeholder-white focus:ring-2 focus:ring-blue-300 outline-none"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 rounded-lg bg-white bg-opacity-30 placeholder-white focus:ring-2 focus:ring-blue-300 outline-none"
-            required
-          />
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
-          >
-            Login
-          </motion.button>
-        </form>
-
-        {/* Google Login */}
-        <motion.button
-          onClick={handleGoogleLogin}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-full bg-red-500 text-white p-3 rounded-lg mt-3 hover:bg-red-600 transition"
+        <Paper
+          elevation={10}
+          sx={{
+            padding: 4,
+            borderRadius: "20px",
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(12px)",
+            color: "#FFDFEF",
+            width: "400px",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
+          }}
         >
-          Sign in with Google
-        </motion.button>
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{ fontWeight: "bold", color: "black" }}
+          >
+            Welcome Back 👋
+          </Typography>
 
-        {/* Register Option */}
-        <p className="text-sm text-center mt-4">
-          Don't have an account?{" "}
-          <button onClick={handleRegister} className="text-blue-300 hover:underline">
-            Register
-          </button>
-        </p>
+          {error && (
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{ color: "red", mt: 2 }}
+            >
+              {error}
+            </Typography>
+          )}
+
+          {/* Login Form */}
+          <Box component="form" onSubmit={handleEmailLogin} sx={{ mt: 3 }}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              variant="filled"
+              sx={{
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "10px",
+                input: { color: "black" },
+                label: { color: "black" },
+                "& .MuiFilledInput-root": { borderRadius: "10px" },
+                "& .MuiFilledInput-underline:before": { borderBottom: "none" },
+              }}
+              required
+            />
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              variant="filled"
+              sx={{
+                mt: 2,
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                borderRadius: "10px",
+                input: { color: "black" },
+                label: { color: "black" },
+                "& .MuiFilledInput-root": { borderRadius: "10px" },
+                "& .MuiFilledInput-underline:before": { borderBottom: "none" },
+              }}
+              required
+            />
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  bgcolor: "#AA60C8",
+                  fontWeight: "bold",
+                  "&:hover": { bgcolor: "#D69ADE" },
+                }}
+                startIcon={<LoginIcon />}
+              >
+                Login
+              </Button>
+            </motion.div>
+          </Box>
+
+          {/* Divider */}
+          <Divider sx={{ my: 3, bgcolor: "rgba(255, 255, 255, 0.3)" }} />
+
+          {/* Google Login */}
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleGoogleLogin}
+              sx={{
+                bgcolor: "#EA4335",
+                color: "white",
+                fontWeight: "bold",
+                "&:hover": { bgcolor: "#D32F2F" },
+              }}
+              startIcon={<GoogleIcon />}
+            >
+              Sign in with Google
+            </Button>
+          </motion.div>
+
+          {/* Register Option */}
+          <Typography variant="body2" align="center" sx={{ mt: 3, color:"black" }}>
+            Don't have an account?{" "}
+            <Button
+              onClick={handleRegister}
+              sx={{
+                color:"black",
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": { textDecoration: "underline" },
+              }}
+              startIcon={<PersonAddIcon />}
+            >
+              Register
+            </Button>
+          </Typography>
+        </Paper>
       </motion.div>
-    </div>
+    </Box>
   );
 };
 

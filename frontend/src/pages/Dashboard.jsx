@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { auth, db } from "../firebase"; // Ensure correct Firebase import
+import { auth, db } from "../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { signOut } from "firebase/auth"; // Import signOut function
-import { useNavigate } from "react-router-dom"; // To redirect after logout
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Button, Typography, Paper, Box, Avatar, Grid, Container } from "@mui/material";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -10,10 +12,9 @@ const Dashboard = () => {
   const [questionCount, setQuestionCount] = useState(0);
   const [recentTestScore, setRecentTestScore] = useState(null);
   const [accuracy, setAccuracy] = useState(0);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Get the authenticated user
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         setUser(authUser);
@@ -23,22 +24,19 @@ const Dashboard = () => {
       }
     });
 
-    return () => unsubscribe(); // Cleanup function
+    return () => unsubscribe();
   }, []);
 
   const fetchUserData = async (userId) => {
     try {
-      // Fetch PDF uploads count
       const pdfQuery = query(collection(db, "pdfs"), where("userId", "==", userId));
       const pdfSnapshot = await getDocs(pdfQuery);
       setPdfCount(pdfSnapshot.size);
 
-      // Fetch question generation count
       const questionQuery = query(collection(db, "questions"), where("userId", "==", userId));
       const questionSnapshot = await getDocs(questionQuery);
       setQuestionCount(questionSnapshot.size);
 
-      // Fetch recent test score
       const testQuery = query(collection(db, "testScores"), where("userId", "==", userId));
       const testSnapshot = await getDocs(testQuery);
       if (!testSnapshot.empty) {
@@ -51,79 +49,168 @@ const Dashboard = () => {
     }
   };
 
-  // 🔹 Logout Function
   const handleLogout = async () => {
     try {
       await signOut(auth);
       setUser(null);
-      navigate("/login"); // Redirect to login page
+      navigate("/login");
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      {user ? (
-        <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6">
-          {/* Profile Section */}
-          <div className="flex items-center mb-6">
-            <img
-              src={user.photoURL || "https://via.placeholder.com/150"}
-              alt="Profile"
-              className="w-16 h-16 rounded-full border-2 border-blue-500"
-            />
-            <div className="ml-4">
-              <h1 className="text-2xl font-semibold text-gray-800">
-                Welcome, {user.displayName || "User"}!
-              </h1>
-              <p className="text-gray-600">{user.email}</p>
-            </div>
-          </div>
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-6">
-            {/* PDF Count */}
-            <div className="bg-blue-100 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold text-blue-700">Total PDFs Uploaded</h2>
-              <p className="text-2xl font-bold text-blue-900">{pdfCount}</p>
-            </div>
-
-            {/* Question Count */}
-            <div className="bg-green-100 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold text-green-700">Total Questions Generated</h2>
-              <p className="text-2xl font-bold text-green-900">{questionCount}</p>
-            </div>
-
-            {/* Test Score */}
-            <div className="bg-yellow-100 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold text-yellow-700">Recent Test Score</h2>
-              <p className="text-2xl font-bold text-yellow-900">
-                {recentTestScore !== null ? recentTestScore : "N/A"}
-              </p>
-            </div>
-
-            {/* Accuracy */}
-            <div className="bg-red-100 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold text-red-700">Accuracy</h2>
-              <p className="text-2xl font-bold text-red-900">{accuracy}%</p>
-            </div>
-          </div>
-
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="mt-6 w-full bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition duration-200"
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#000", // Matte Black Background
+        color: "#FFDFEF", // Pale Pink Text
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        paddingTop: { xs: "80px", md: "100px" }, // Space below navbar
+      }}
+    >
+      <Container maxWidth="md">
+        {user ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
           >
-            Logout
-          </button>
-        </div>
-      ) : (
-        <div className="bg-white p-6 shadow-lg rounded-lg">
-          <h2 className="text-xl font-semibold text-red-600">Please sign in to access your dashboard.</h2>
-        </div>
-      )}
-    </div>
+            <Paper
+              elevation={6}
+              sx={{
+                padding: 4,
+                borderRadius: "20px",
+                background: "rgba(255, 255, 255, 0.1)", // Glassmorphism effect
+                backdropFilter: "blur(10px)",
+                textAlign: "center",
+              }}
+            >
+              {/* Profile Section */}
+              <Avatar
+                src={user.photoURL || "https://via.placeholder.com/150"}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  margin: "0 auto",
+                  border: "2px solid #AA60C8",
+                }}
+              />
+              <Typography variant="h4" sx={{ fontWeight: "bold", color: "#D69ADE", mt: 2 }}>
+                Welcome, {user.displayName || "User"}!
+              </Typography>
+              <Typography variant="body1" sx={{ color: "#EABDE6" }}>
+                {user.email}
+              </Typography>
+
+              {/* Stats Grid */}
+              <Grid container spacing={3} sx={{ mt: 4 }}>
+                {/* PDF Count */}
+                <Grid item xs={12} sm={6}>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Paper
+                      sx={{
+                        padding: 3,
+                        borderRadius: "10px",
+                        textAlign: "center",
+                        bgcolor: "rgba(170, 96, 200, 0.2)",
+                        color: "#AA60C8",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Typography variant="h6">Total PDFs</Typography>
+                      <Typography variant="h4">{pdfCount}</Typography>
+                    </Paper>
+                  </motion.div>
+                </Grid>
+
+                {/* Question Count */}
+                <Grid item xs={12} sm={6}>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Paper
+                      sx={{
+                        padding: 3,
+                        borderRadius: "10px",
+                        textAlign: "center",
+                        bgcolor: "rgba(214, 154, 222, 0.2)",
+                        color: "#D69ADE",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Typography variant="h6">Total Questions</Typography>
+                      <Typography variant="h4">{questionCount}</Typography>
+                    </Paper>
+                  </motion.div>
+                </Grid>
+
+                {/* Recent Test Score */}
+                <Grid item xs={12} sm={6}>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Paper
+                      sx={{
+                        padding: 3,
+                        borderRadius: "10px",
+                        textAlign: "center",
+                        bgcolor: "rgba(234, 189, 230, 0.2)",
+                        color: "#EABDE6",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Typography variant="h6">Recent Test Score</Typography>
+                      <Typography variant="h4">{recentTestScore !== null ? recentTestScore : "N/A"}</Typography>
+                    </Paper>
+                  </motion.div>
+                </Grid>
+
+                {/* Accuracy */}
+                <Grid item xs={12} sm={6}>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Paper
+                      sx={{
+                        padding: 3,
+                        borderRadius: "10px",
+                        textAlign: "center",
+                        bgcolor: "rgba(255, 223, 239, 0.2)",
+                        color: "#FFDFEF",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Typography variant="h6">Accuracy</Typography>
+                      <Typography variant="h4">{accuracy}%</Typography>
+                    </Paper>
+                  </motion.div>
+                </Grid>
+              </Grid>
+
+              {/* Logout Button */}
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  fullWidth
+                  onClick={handleLogout}
+                  sx={{
+                    mt: 4,
+                    bgcolor: "#AA60C8",
+                    color: "white",
+                    fontWeight: "bold",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    "&:hover": { bgcolor: "#D69ADE" },
+                  }}
+                >
+                  Logout
+                </Button>
+              </motion.div>
+            </Paper>
+          </motion.div>
+        ) : (
+          <Paper sx={{ padding: 6, borderRadius: "20px", textAlign: "center", bgcolor: "rgba(255, 255, 255, 0.1)", backdropFilter: "blur(10px)" }}>
+            <Typography variant="h5" sx={{ color: "red" }}>Please sign in to access your dashboard.</Typography>
+          </Paper>
+        )}
+      </Container>
+    </Box>
   );
 };
 

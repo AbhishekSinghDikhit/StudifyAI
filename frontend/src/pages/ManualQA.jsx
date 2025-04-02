@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { auth } from "../firebase"; // Firebase auth
-import { useNavigate } from "react-router-dom"; // Redirect unauthenticated users
+import { auth } from "../firebase"; 
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { CircularProgress } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const ManualQA = () => {
   const [user, setUser] = useState(null);
@@ -11,9 +14,10 @@ const ManualQA = () => {
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [copySuccess, setCopySuccess] = useState(false);
   const navigate = useNavigate();
+  const answerRef = useRef(null);
 
-  // 🔹 Check authentication on mount
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
@@ -27,10 +31,8 @@ const ManualQA = () => {
     return () => unsubscribe();
   }, [navigate]);
 
-  // Handle PDF Upload
   const handleFileChange = (e) => setPdfFile(e.target.files[0]);
 
-  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -45,6 +47,8 @@ const ManualQA = () => {
 
     setLoading(true);
     setError(null);
+    setAnswer("");
+    setCopySuccess(false);
 
     const formData = new FormData();
     formData.append("pdf_file", pdfFile);
@@ -62,71 +66,113 @@ const ManualQA = () => {
     }
   };
 
+  const handleCopy = () => {
+    if (answer) {
+      navigator.clipboard.writeText(answer);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 p-6">
-      <h1 className="text-4xl font-bold text-white mb-6 drop-shadow-md">📘 ManualQA Tool</h1>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-[#AA60C8] to-[#FFDFEF] p-6">
+    {/* Push content down so it's always below the navbar */}
+     <div className="mt-20 w-full flex justify-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.7 }}
+        className="bg-white bg-opacity-30 backdrop-blur-lg p-8 rounded-2xl shadow-2xl max-w-xl w-full"
+      >
+        <h1 className="text-3xl font-bold text-center text-black mb-4">📘 Manual Q&A</h1>
+        <p className="text-lg text-gray-900 text-center mb-6">
+          Upload a PDF and ask a question to get an AI-generated answer.
+        </p>
 
-      {!user ? (
-        <p className="text-white bg-red-600 px-4 py-2 rounded-lg shadow-lg">⚠ Please log in to use this feature.</p>
-      ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white/30 backdrop-blur-lg p-6 rounded-lg shadow-2xl w-full max-w-md border border-white/20"
-        >
-          {/* 📄 Upload PDF */}
-          <label className="block text-white font-semibold mb-2">📄 Upload PDF:</label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300 bg-white/50"
-          />
+        {/* Authentication Check */}
+        {!user ? (
+          <p className="text-red-600 text-center font-semibold">🔒 Please log in to use this feature.</p>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* PDF Upload */}
+            <label className="block text-black font-semibold">📄 Upload PDF:</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded-lg focus:ring focus:ring-[#AA60C8] bg-white"
+            />
 
-          {/* ❓ Ask a Question */}
-          <label className="block text-white font-semibold mt-4 mb-2">❓ Ask a Question:</label>
-          <textarea
-            rows="3"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300 bg-white/50"
-            placeholder="Type your question here..."
-          />
+            {/* Question Input */}
+            <label className="block text-black font-semibold">❓ Ask a Question:</label>
+            <textarea
+              rows="3"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:ring focus:ring-[#AA60C8] bg-white"
+              placeholder="Type your question here..."
+            />
 
-          {/* ✏ Word Limit */}
-          <label className="block text-white font-semibold mt-4 mb-2">✏ Word Limit:</label>
-          <input
-            type="number"
-            value={wordLimit}
-            onChange={(e) => setWordLimit(e.target.value)}
-            className="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300 bg-white/50"
-            min="10"
-          />
+            {/* Word Limit */}
+            <label className="block text-black font-semibold">✏ Word Limit:</label>
+            <input
+              type="number"
+              value={wordLimit}
+              onChange={(e) => setWordLimit(e.target.value)}
+              className="w-full p-2 border rounded-lg focus:ring focus:ring-[#AA60C8] bg-white"
+              min="10"
+            />
 
-          {/* 🚀 Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold p-2 rounded-lg mt-4 shadow-md hover:from-green-600 hover:to-green-700 transition-all duration-300"
-            disabled={!user}
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#AA60C8] to-[#8A45A3] text-white font-semibold p-2 rounded-lg shadow-md hover:from-[#8A45A3] hover:to-[#6C2F91] transition-all duration-300"
+              disabled={!user}
+            >
+              {loading ? "Processing..." : "Get Answer"}
+            </button>
+          </form>
+        )}
+
+        {/* Loading Indicator */}
+        {loading && (
+          <div className="flex justify-center mt-4">
+            <CircularProgress size={32} sx={{ color: "#AA60C8" }} />
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && <p className="mt-4 text-red-600 text-center font-semibold">{error}</p>}
+
+        {/* Answer Display */}
+        {answer && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-6 bg-white bg-opacity-60 p-4 rounded-xl text-black max-h-60 overflow-y-auto"
+            ref={answerRef}
           >
-            {loading ? "Processing..." : "Get Answer"}
-          </button>
-        </form>
-      )}
+            <h2 className="text-lg font-semibold text-[#AA60C8] mb-2">📌 AI-Generated Answer:</h2>
+            <p className="text-base">{answer}</p>
+          </motion.div>
+        )}
 
-      {/* 🔄 Loading State */}
-      {loading && <div className="mt-4 text-white animate-pulse">⏳ Processing your request...</div>}
-      
-      {/* ⚠ Error Message */}
-      {error && <p className="mt-4 text-red-500 font-semibold bg-white/80 p-2 rounded-lg shadow">{error}</p>}
-
-      {/* ✅ Display Answer */}
-      {answer && (
-        <div className="mt-6 p-6 bg-white/30 backdrop-blur-lg shadow-lg rounded-lg w-full max-w-md border border-white/20">
-          <h2 className="text-lg font-bold text-green-500">✅ Answer:</h2>
-          <p className="mt-2 text-gray-900 font-medium">{answer}</p>
-        </div>
-      )}
+        {/* Copy Button Below Answer */}
+        {answer && (
+          <div className="flex justify-end mt-3">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1 px-3 py-1 bg-[#AA60C8] text-white rounded-lg text-sm font-semibold shadow-md hover:bg-[#8A45A3] transition"
+            >
+              <ContentCopyIcon fontSize="small" />
+              {copySuccess ? "Copied!" : "Copy"}
+            </button>
+          </div>
+        )}
+      </motion.div>
     </div>
+  </div>
   );
 };
 

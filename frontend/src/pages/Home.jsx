@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Box, Typography, Card, CardContent, Button, Container, Grid } from "@mui/material";
 
 const Home = () => {
   const features = [
@@ -7,72 +8,119 @@ const Home = () => {
       title: "📄 PDF Summarization",
       description: "Upload PDFs and get AI-generated summaries instantly.",
       link: "/pdf-summarization",
-      bgColor: "from-blue-500 to-blue-700",
+      bgColor: "rgba(170, 96, 200, 0.4)", // Softer transparency
+      shadowColor: "rgba(170, 96, 200, 0.3)",
     },
     {
       title: "📝 Question Generation & Evaluation",
       description: "Generate questions from PDFs and evaluate answers using AI.",
       link: "/question-form",
-      bgColor: "from-green-500 to-green-700",
+      bgColor: "rgba(214, 154, 222, 0.4)", // Softer transparency
+      shadowColor: "rgba(214, 154, 222, 0.3)",
     },
     {
       title: "❓ Manual Q&A",
       description: "Create and manage your own questions and answers.",
       link: "/manual-qa",
-      bgColor: "from-purple-500 to-purple-700",
+      bgColor: "rgba(234, 189, 230, 0.4)", // Softer transparency
+      shadowColor: "rgba(234, 189, 230, 0.3)",
     },
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 p-6">
+    <Box
+      sx={{
+        minHeight: "100vh",
+        width: "100vw",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "#1A1A1A", // Matte Black Background
+        color: "white",
+        px: 2,
+        py: 6,
+      }}
+    >
       {/* Heading */}
-      <motion.h1
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-5xl font-extrabold text-blue-600 mb-6 drop-shadow-lg"
-      >
-        Welcome to StudifyAI 🎓
-      </motion.h1>
+      <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          textAlign="center"
+          gutterBottom
+          sx={{
+            mt: -4, // Moves the heading slightly up
+            color: "#D69ADE", // Soft Lilac
+          }}
+        >
+          Welcome to StudifyAI 🎓
+        </Typography>
+      </motion.div>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="text-lg text-gray-800 text-center max-w-2xl mb-10"
-      >
-        Upload your PDFs and let AI summarize them, generate questions, and evaluate your answers seamlessly.
-      </motion.p>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}>
+        <Typography variant="h6" color="white" textAlign="center" maxWidth="md" mb={4}>
+          Upload your PDFs and let AI summarize them, generate questions, and evaluate your answers seamlessly.
+        </Typography>
+      </motion.div>
 
       {/* Feature Cards */}
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: { opacity: 0, scale: 0.9 },
-          visible: { opacity: 1, scale: 1, transition: { delay: 0.3, duration: 0.6 } },
-        }}
-      >
+      <Grid container spacing={4} justifyContent="center">
         {features.map((feature, index) => (
-          <motion.div
-            key={index}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`p-6 rounded-xl shadow-lg bg-gradient-to-br ${feature.bgColor} text-white transform transition-transform`}
-          >
-            <h2 className="text-2xl font-semibold mb-3">{feature.title}</h2>
-            <p className="mb-4">{feature.description}</p>
-            <Link
-              to={feature.link}
-              className="bg-white text-gray-900 px-4 py-2 rounded-md hover:bg-gray-200 transition"
-            >
-              Explore →
-            </Link>
-          </motion.div>
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Card
+                sx={{
+                  bgcolor: feature.bgColor,
+                  color: "white",
+                  boxShadow: `0px 5px 15px ${feature.shadowColor}`, // Reduced glow effect
+                  borderRadius: 4,
+                  width: 300, // Increased size
+                  height: 300, // Increased size
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  backdropFilter: "blur(8px)", // Smooth glass effect
+                  border: "1px solid rgba(255, 255, 255, 0.1)", // Reduced border visibility
+                  transition: "0.3s",
+                  "&:hover": { transform: "scale(1.03)", boxShadow: `0px 8px 20px ${feature.shadowColor}` },
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
+                    {feature.title}
+                  </Typography>
+                  <Typography variant="body1" mb={2}>
+                    {feature.description}
+                  </Typography>
+                  <Button
+                    component={Link}
+                    to={feature.link}
+                    variant="contained"
+                    sx={{
+                      bgcolor: "white",
+                      color: "#AA60C8", // Vibrant Purple Text
+                      fontWeight: "bold",
+                      borderRadius: "12px",
+                      transition: "0.3s",
+                      "&:hover": { bgcolor: "#D69ADE", color: "white", transform: "scale(1.05)" },
+                    }}
+                  >
+                    Explore →
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </Grid>
         ))}
-      </motion.div>
-    </div>
+      </Grid>
+    </Box>
   );
 };
 
