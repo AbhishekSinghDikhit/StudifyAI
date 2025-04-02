@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button, Typography, Paper, Box, Avatar, Grid, Container } from "@mui/material";
+import Navbar from "/src/components/Navbar"; 
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -60,66 +61,37 @@ const Dashboard = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        bgcolor: "#000", // Matte Black Background
-        color: "#FFDFEF", // Pale Pink Text
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        paddingTop: { xs: "80px", md: "100px" }, // Space below navbar
-      }}
-    >
-      <Container maxWidth="md">
+    <Box sx={{ minHeight: "100vh", bgcolor: "#000", color: "#FFDFEF", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* Navbar at the top */}
+      <Navbar />
+
+      {/* Welcome Message BELOW Navbar */}
+      <Container maxWidth="md" sx={{ mt: 4 }}>
         {user ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
             <Paper
               elevation={6}
               sx={{
                 padding: 4,
                 borderRadius: "20px",
-                background: "rgba(255, 255, 255, 0.1)", // Glassmorphism effect
+                background: "rgba(255, 255, 255, 0.1)",
                 backdropFilter: "blur(10px)",
                 textAlign: "center",
               }}
             >
               {/* Profile Section */}
-              <Avatar
-                src={user.photoURL || "https://via.placeholder.com/150"}
-                sx={{
-                  width: 80,
-                  height: 80,
-                  margin: "0 auto",
-                  border: "2px solid #AA60C8",
-                }}
-              />
+              <Avatar src={user.photoURL || "https://via.placeholder.com/150"} sx={{ width: 80, height: 80, margin: "0 auto", border: "2px solid #AA60C8" }} />
               <Typography variant="h4" sx={{ fontWeight: "bold", color: "#D69ADE", mt: 2 }}>
                 Welcome, {user.displayName || "User"}!
               </Typography>
-              <Typography variant="body1" sx={{ color: "#EABDE6" }}>
-                {user.email}
-              </Typography>
+              <Typography variant="body1" sx={{ color: "#EABDE6" }}>{user.email}</Typography>
 
               {/* Stats Grid */}
               <Grid container spacing={3} sx={{ mt: 4 }}>
                 {/* PDF Count */}
                 <Grid item xs={12} sm={6}>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Paper
-                      sx={{
-                        padding: 3,
-                        borderRadius: "10px",
-                        textAlign: "center",
-                        bgcolor: "rgba(170, 96, 200, 0.2)",
-                        color: "#AA60C8",
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <Paper sx={{ padding: 3, borderRadius: "10px", textAlign: "center", bgcolor: "rgba(170, 96, 200, 0.2)", color: "#AA60C8", fontWeight: "bold" }}>
                       <Typography variant="h6">Total PDFs</Typography>
                       <Typography variant="h4">{pdfCount}</Typography>
                     </Paper>
@@ -129,16 +101,7 @@ const Dashboard = () => {
                 {/* Question Count */}
                 <Grid item xs={12} sm={6}>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Paper
-                      sx={{
-                        padding: 3,
-                        borderRadius: "10px",
-                        textAlign: "center",
-                        bgcolor: "rgba(214, 154, 222, 0.2)",
-                        color: "#D69ADE",
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <Paper sx={{ padding: 3, borderRadius: "10px", textAlign: "center", bgcolor: "rgba(214, 154, 222, 0.2)", color: "#D69ADE", fontWeight: "bold" }}>
                       <Typography variant="h6">Total Questions</Typography>
                       <Typography variant="h4">{questionCount}</Typography>
                     </Paper>
@@ -148,16 +111,7 @@ const Dashboard = () => {
                 {/* Recent Test Score */}
                 <Grid item xs={12} sm={6}>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Paper
-                      sx={{
-                        padding: 3,
-                        borderRadius: "10px",
-                        textAlign: "center",
-                        bgcolor: "rgba(234, 189, 230, 0.2)",
-                        color: "#EABDE6",
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <Paper sx={{ padding: 3, borderRadius: "10px", textAlign: "center", bgcolor: "rgba(234, 189, 230, 0.2)", color: "#EABDE6", fontWeight: "bold" }}>
                       <Typography variant="h6">Recent Test Score</Typography>
                       <Typography variant="h4">{recentTestScore !== null ? recentTestScore : "N/A"}</Typography>
                     </Paper>
@@ -167,16 +121,7 @@ const Dashboard = () => {
                 {/* Accuracy */}
                 <Grid item xs={12} sm={6}>
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Paper
-                      sx={{
-                        padding: 3,
-                        borderRadius: "10px",
-                        textAlign: "center",
-                        bgcolor: "rgba(255, 223, 239, 0.2)",
-                        color: "#FFDFEF",
-                        fontWeight: "bold",
-                      }}
-                    >
+                    <Paper sx={{ padding: 3, borderRadius: "10px", textAlign: "center", bgcolor: "rgba(255, 223, 239, 0.2)", color: "#FFDFEF", fontWeight: "bold" }}>
                       <Typography variant="h6">Accuracy</Typography>
                       <Typography variant="h4">{accuracy}%</Typography>
                     </Paper>
@@ -186,19 +131,7 @@ const Dashboard = () => {
 
               {/* Logout Button */}
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  fullWidth
-                  onClick={handleLogout}
-                  sx={{
-                    mt: 4,
-                    bgcolor: "#AA60C8",
-                    color: "white",
-                    fontWeight: "bold",
-                    padding: "10px",
-                    borderRadius: "10px",
-                    "&:hover": { bgcolor: "#D69ADE" },
-                  }}
-                >
+                <Button fullWidth onClick={handleLogout} sx={{ mt: 4, bgcolor: "#AA60C8", color: "white", fontWeight: "bold", padding: "10px", borderRadius: "10px", "&:hover": { bgcolor: "#D69ADE" } }}>
                   Logout
                 </Button>
               </motion.div>
