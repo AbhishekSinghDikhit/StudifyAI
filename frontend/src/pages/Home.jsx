@@ -47,7 +47,7 @@ const Home = () => {
       <Navbar />
 
       {/* Welcome Message BELOW Navbar */}
-      <Box sx={{ mt: 4, textAlign: "center" }}> {/* Added margin-top to push it down */}
+      <Box sx={{ mt: 6, textAlign: "center" }}> {/* Added margin-top to push it down */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <Typography
             variant="h3"
