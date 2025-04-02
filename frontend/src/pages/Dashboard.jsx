@@ -5,7 +5,7 @@ import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button, Typography, Paper, Box, Avatar, Grid, Container } from "@mui/material";
-import Navbar from "/src/components/Navbar"; 
+import Navbar from "/src/components/Navbar"; // Import Navbar
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -65,8 +65,8 @@ const Dashboard = () => {
       {/* Navbar at the top */}
       <Navbar />
 
-      {/* Welcome Message BELOW Navbar */}
-      <Container maxWidth="md" sx={{ mt: 4 }}>
+      {/* Welcome Message BELOW Navbar with mt:6 */}
+      <Container maxWidth="md" sx={{ mt: 17 }}>
         {user ? (
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
             <Paper
